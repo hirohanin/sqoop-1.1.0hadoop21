@@ -1,0 +1,88 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Sqoop 1.1.0 Release Notes</title>
+<style type="Text/css">
+h1 {font-family: sans-serif}
+h2 {font-family: sans-serif; margin-left: 7mm}
+h4 {font-family: sans-serif; margin-left: 7mm}
+</style></head>
+<body><h1>Release Notes for Sqoop 1.1.0: September, 2010</h1>
+
+<p>This document lists all Sqoop issues included in version 1.1.0
+not present in the previous release, 1.0.0.</p> 
+<h4>Bug fixes:</h4><ul>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-62">SQOOP-62</a>] - Fix failing Oracle compatibility tests.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-94">SQOOP-94</a>] - COMPILING.txt does not mention all dependencies.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-86">SQOOP-86</a>] - Release note generation requires python 2.5.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-85">SQOOP-85</a>] - Additional documentation build adjustments.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-81">SQOOP-81</a>] - Creation of /tmp/sqoop/compile is not multi-user friendly.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-84">SQOOP-84</a>] - Fix documentation build error under CentOS.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-80">SQOOP-80</a>] - bin/configure-sqoop improperly escapes shell variable names.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-47">SQOOP-47</a>] - NPE if --append is specified with HBase import target.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-72">SQOOP-72</a>] - sqoop-eval should use PreparedStatement.execute().</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-38">SQOOP-38</a>] - Direct PostgreSQL import only works when providing a port.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-68">SQOOP-68</a>] - Delimiters in strings are not escaped properly.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-66">SQOOP-66</a>] - Jar for ConnManager class is not included in job payload.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-63">SQOOP-63</a>] - JobBase classes unnecessarily create ConnManagers.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-52">SQOOP-52</a>] - Stop TestHBaseImport from timing out.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-55">SQOOP-55</a>] - BaseSqoopTestCase.createTableWithColTypes() calls close() twice.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-45">SQOOP-45</a>] - If compilation dir is unspecified, use a nonce directory.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-6">SQOOP-6</a>] - Job completion percentage is inaccurate.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-15">SQOOP-15</a>] - Do not assume that Job.getCounters() returns non-null.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-32">SQOOP-32</a>] - sqoop-export documentation in SqoopUserGuide refers to 'import-args'.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-22">SQOOP-22</a>] - Sqoop date tests are too permissive.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-2">SQOOP-2</a>] - MySQLExportMapper does not send username.</li>
+</ul>
+<h4>Improvements:</h4><ul>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-89">SQOOP-89</a>] - Support multiple output files in ManagerCompatTestCase.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-88">SQOOP-88</a>] - Parameterize pre-table-import validity checks in SqlManager.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-79">SQOOP-79</a>] - Add scripts to start/stop metastore in background, use pidfiles.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-51">SQOOP-51</a>] - Document driver jar installation process.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-75">SQOOP-75</a>] - Allow configuration of ManagerFactories through a configuration subdirectory.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-73">SQOOP-73</a>] - Generated records should handle more boolean value formats.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-40">SQOOP-40</a>] - SqoopOptions should use annotations to bind fields to properties.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-69">SQOOP-69</a>] - Improve data accessible to ManagerFactory.accept().</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-65">SQOOP-65</a>] - Refactor some utilities out of MySQLExportMapper.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-59">SQOOP-59</a>] - 'sqoop eval' should support DDL/DML operations.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-56">SQOOP-56</a>] - Improve parameterization of ManagerCompatTestCase.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-54">SQOOP-54</a>] - Allow per-manager configuration of isolation level for metadata queries.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-53">SQOOP-53</a>] - Build test jar and publish to maven.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-35">SQOOP-35</a>] - Bundle job dependencies via DistributedCache.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-46">SQOOP-46</a>] - Sqoop 'verbose' mode shows too much IPC chatter.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-10">SQOOP-10</a>] - Provide a useful error message when a Java compiler cannot be found.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-4">SQOOP-4</a>] - Add update-mode export process.</li>
+</ul>
+<h4>New features:</h4><ul>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-90">SQOOP-90</a>] - Tool to merge datasets imported via incremental import.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-76">SQOOP-76</a>] - Add automated release note generation script.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-36">SQOOP-36</a>] - Redistribute mysql-connector-j with Sqoop.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-41">SQOOP-41</a>] - Add support for incremental imports.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-39">SQOOP-39</a>] - (<a href="http://wiki.github.com/cloudera/sqoop/SIP-6">SIP-6</a>) Session Management API.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-14">SQOOP-14</a>] - Allow Sqoop to import data into HBase.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-3">SQOOP-3</a>] - Add ability to import arbitrary queries.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-16">SQOOP-16</a>] - Generate Eclipse project with ant.</li>
+</ul>
+<h4>Tasks:</h4><ul>
+<li>Increment version number for release.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-78">SQOOP-78</a>] - Consolidate web-based documentation and tarball documentation.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-60">SQOOP-60</a>] - Include <a href="http://wiki.github.com/cloudera/sqoop/SIP-6">SIP-6</a> document in source repository.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-42">SQOOP-42</a>] - Document saved jobs, metastore, and incremental imports.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-77">SQOOP-77</a>] - Rename saved sessions to saved jobs.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-64">SQOOP-64</a>] - Refactor named FIFO creation into standalone utility.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-24">SQOOP-24</a>] - Copy o.a.h.mapreduce.lib.db classes into Sqoop.</li>
+<li>[<a href="https://issues.cloudera.org/browse/SQOOP-23">SQOOP-23</a>] - Add accepted SIPs to the repository.</li>
+<li>Sqoop can compile against locally-installed Hadoop</li>
+<li>SequenceFile detection should ignore directories.</li>
+<li>OracleManager should limit getColNamesQuery() results.</li>
+<li>Allow explicitly-set git hash in version info.</li>
+<li>Provide maven install/deploy tasks.</li>
+<li>Add 'release' target for one-step full build.</li>
+<li>Add release audit capability.</li>
+<li>Add webdocs target to build release docs website.</li>
+<li>'conf' directory added to classpath</li>
+<li>Adjust regex used to recognize CDH3 in ShimLoader.</li>
+<li>Update ivy to use latest CDH staging build.</li>
+<li>Set default Hadoop distribution to Cloudera (CDH).</li>
+<li>Increment version for master branch.</li>
+</ul>
+</body></html>

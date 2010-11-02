@@ -1,0 +1,5 @@
+export HADOOP_HOME=/usr/lib/hadoop
+export HBASE_HOME=/usr/lib/hbase
+export ZOOKEEPER_HOME=/usr/lib/zookeeper
+export CLASSPATH=$CLASSPATH:./lib/postgresql-8.3-603.jdbc4.jar
+export HIVE_HOME=/usr/lib/hive

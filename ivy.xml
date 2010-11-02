@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!--
+   Licensed to Cloudera, Inc. under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   Cloudera, Inc. licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+    
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<ivy-module version="1.0">
+  <info organisation="com.cloudera.sqoop" module="${name}">
+    <license name="Apache 2.0"/>
+    <ivyauthor name="Sqoop Team" url="http://github.com/cloudera/sqoop" />
+    <description>
+        Sqoop
+    </description>
+  </info>
+  <configurations defaultconfmapping="default">
+    <!--these match the Maven configurations-->
+    <conf name="default" extends="master,runtime"/>
+    <conf name="master" description="contains the artifact but no dependencies"/>
+    <conf name="runtime" description="runtime but not the artifact" />
+
+    <conf name="common" visibility="private"
+      extends="runtime"
+      description="artifacts needed to compile/test the application"/>
+    <conf name="apache" visibility="private"
+      extends="common,runtime"
+      description="artifacts from Apache for compile/test" />
+    <conf name="apache21" visibility="private"
+      extends="common,runtime"
+      description="artifacts from Apache 0.21 for compile/test" />
+    <conf name="cloudera" visibility="private"
+      extends="common,runtime"
+      description="artifacts from Cloudera for compile/test" />
+
+    <conf name="test" visibility="private" extends="common,runtime"/>
+    <conf name="apachetest" visibility="private"
+      extends="test,apache"
+      description="artifacts from Apache for testing" />
+    <conf name="apache21test" visibility="private"
+      extends="test,apache21"
+      description="artifacts from Apache 0.21 for testing" />
+    <conf name="clouderatest" visibility="private"
+      extends="test,cloudera"
+      description="artifacts from Cloudera for testing" />
+
+    <!-- We don't redistribute everything we depend on (e.g., Hadoop itself);
+         anything which Hadoop itself also depends on, we do not ship.
+         Things we actually need to ship are marked with a 'redist'
+         configuration. -->
+    <conf name="redist" visibility="private" extends="master" />
+
+    <!-- This configuration is used to identify dependencies on our own
+         shim targets required by clients of Sqoop who use maven. -->
+    <conf name="mvndeploy" visibility="private" extends="master" />
+
+    <!-- configuration for running checkstyle -->
+    <conf name="checkstyle" visibility="private" />
+
+    <!-- configuration for running rat -->
+    <conf name="releaseaudit" visibility="private" />
+  </configurations>
+
+  <publications>
+    <!--get the artifact from our module name-->
+    <artifact conf="master"/>
+  </publications>
+  <dependencies>
+    <!-- Dependencies for Apache Hadoop (trunk) -->
+    <dependency org="org.apache.hadoop" name="hadoop-common"
+      rev="${hadoop-common.apache.version}" conf="apache->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-common-test"
+      rev="${hadoop-common.apache.version}" conf="apachetest->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-hdfs"
+      rev="${hadoop-hdfs.apache.version}" conf="apache->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-hdfs-test"
+      rev="${hadoop-hdfs.apache.version}" conf="apachetest->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-mapred"
+      rev="${hadoop-mapred.apache.version}" conf="apache->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-mapred-test"
+      rev="${hadoop-mapred.apache.version}" conf="apachetest->default"/>
+
+    <!-- Dependencies for Apache Hadoop (0.21) -->
+    <dependency org="org.apache.hadoop" name="hadoop-common"
+      rev="${hadoop-common.apache21.version}" conf="apache21->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-common-test"
+      rev="${hadoop-common.apache21.version}" conf="apache21test->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-hdfs"
+      rev="${hadoop-hdfs.apache21.version}" conf="apache21->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-hdfs-test"
+      rev="${hadoop-hdfs.apache21.version}" conf="apache21test->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-mapred"
+      rev="${hadoop-mapred.apache21.version}" conf="apache21->default"/>
+    <dependency org="org.apache.hadoop" name="hadoop-mapred-test"
+      rev="${hadoop-mapred.apache21.version}" conf="apache21test->default"/>
+
+    <!-- Dependencies for Cloudera's Distribution for Hadoop -->
+    <dependency org="com.cloudera.hadoop" name="hadoop-core"
+      rev="${hadoop-core.cloudera.version}" conf="cloudera->default"/>
+    <dependency org="com.cloudera.hadoop" name="hadoop-test"
+      rev="${hadoop-core.cloudera.version}" conf="clouderatest->default"/>
+
+    <!-- Common dependencies for Sqoop -->
+    <dependency org="commons-cli" name="commons-cli"
+      rev="${commons-cli.version}" conf="common->default"/>
+    <dependency org="commons-logging" name="commons-logging"
+      rev="${commons-logging.version}" conf="common->default"/>
+    <dependency org="log4j" name="log4j" rev="${log4j.version}"
+      conf="common->master" />
+    <dependency org="junit" name="junit" rev="${junit.version}"
+      conf="test->default"/>
+    <!--
+    <dependency org="org.apache.hbase" name="hbase" rev="${hbase.version}"
+      conf="common->default" />
+      -->
+    <dependency org="hsqldb" name="hsqldb" rev="${hsqldb.version}"
+      conf="common->default"/>
+    <dependency org="commons-io" name="commons-io" rev="${commons-io.version}"
+      conf="common->default;redist->default"/>
+    
+    <!-- dependencies for static analysis -->
+    <dependency org="checkstyle" name="checkstyle" rev="${checkstyle.version}"
+      conf="checkstyle->default" />
+
+    <dependency org="com.google.code.p.arat" name="rat-lib"
+          rev="${rats-lib.version}" conf="releaseaudit->default" />
+    <dependency org="commons-lang" name="commons-lang"
+      rev="${commons-lang.version}" conf="releaseaudit->default"/>
+    <dependency org="commons-collections" name="commons-collections"
+      rev="${commons-collections.version}" conf="releaseaudit->default"/>
+
+    <!-- dependencies on the shim jars we generate, for release poms -->
+    <dependency org="com.cloudera.sqoop" name="sqoop-shim-apache"
+      rev="${version}" conf="mvndeploy->default" />
+    <dependency org="com.cloudera.sqoop" name="sqoop-shim-cloudera"
+      rev="${version}" conf="mvndeploy->default" />
+  </dependencies>
+</ivy-module>

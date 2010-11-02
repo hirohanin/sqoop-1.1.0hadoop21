@@ -1,0 +1,266 @@
+
+= Compiling
+
+This document explains how to compile Sqoop.
+
+////
+   Licensed to Cloudera, Inc. under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   Cloudera, Inc. licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+
+== Build Dependencies
+
+Compiling Sqoop requires the following tools:
+
+* Apache ant (1.7.1)
+* Java JDK 1.6
+
+Additionally, building the documentation requires these tools:
+
+* asciidoc
+* make
+* python 2.5+
+* xmlto
+* tar
+* gzip
+
+Furthermore, Sqoop's build can be instrumented with the following:
+
+* findbugs (1.3.9) for code quality checks
+* cobertura (1.9.4.1) for code coverage
+* checkstyle (5.x) for code style checks
+
+Finally, while most of Sqoop's compilation dependencies are in the lib/
+directory, or retrieved via Ivy, the following dependencies must be installed
+on your system:
+
+* HBase
+* Zookeeper
+
+Both of these must be from the most recent version of CDH. These can be
+installed on linux machines via yum or apt-get; any users may also use the
+tarballs available at http://archive.cloudera.com/cdh/3/.
+
+== Configuring your build
+
+The location of HBase and Zookeeper must be specified to the Sqoop build via
+ant properties. All compilation / testing requires the +hbase.home+ and
++zookeeper.home+ properties to be set. This can be done on the command line
+(e.g.: +ant jar -Dhbase.home=/path/to/hbase -Dzookeeper.home=/path/to/zk+), or
+in a properties file.
+
+Sqoop will automatically load properties out of a file named
+'build.properties' in your Sqoop source root, or your home directory. You
+should create such a file and include the lines:
+
+hbase.home=/path/to/hbase
+zookeeper.home=/path/to/zk
+
+== The Basics
+
+Sqoop is compiled with ant. Type +ant -p+ to see the list of available targets.
+
+Type +ant+ to compile all java sources. You can then run Sqoop with +bin/sqoop+.
+
+If you want to build everything (including the documentation), type
++ant package+. This will appear in the
++build/sqoop-(version)/+ directory.
+
+== Testing Sqoop
+
+Sqoop has several unit tests which can be run with +ant test+. This command
+will run all the "basic" checks against an in-memory database, HSQLDB.
+
+Sqoop also has compatibility tests that check its ability to work with
+several third-party databases. To enable these tests, you will need to install
+and configure the databases, and download the JDBC drivers for each one.
+
+=== MySQL
+
+Install MySQL server and client 5.0. Download MySQL Connector/J 5.0.8 for
+JDBC. Instructions for configuring the MySQL database are in MySQLAuthTest
+and DirectMySQLTest.
+
+=== Oracle
+
+Install Oracle XE (Express edition) 10.2.0. Instructions for configuring the
+database are in OracleManagerTest. Download the ojdbc6_g jar.
+
+=== PostgreSQL
+
+Install PostgreSQL 8.3.9. Download the postgresql 8.4 jdbc driver. Instructions
+for configuring the database are in PostgresqlTest.
+
+=== Running the Third-party Tests
+
+After the third-party databases are installed and configured, run:
+
+++++
+ant test -Dthirdparty=true -Dsqoop.thirdparty.lib.dir=/path/to/jdbc/drivers/
+++++
+
+
+Note that +sqoop.thirdparty.lib.dir+ can also be specified in
++build.properties+.
+
+== Multiple Hadoop Distributions
+
+Sqoop can be compiled against different versions of Hadoop. Both the svn
+trunk of Apache Hadoop, and Cloudera's Distribution for Hadoop (CDH3)
+can be used as the underlying Hadoop implementation.
+
+By default, Sqoop will compile against the latest snapshot from Apache
+(retrieved through maven). You can specify the Hadoop distribution to
+retrieve with the hadoop.dist property. Valid values are "apache",
+"apache21", or "cloudera":
+
+++++
+ant jar -Dhadoop.dist=apache # Uses the nightly build of "trunk"
+ant jar -Dhadoop.dist=apache21
+ant jar -Dhadoop.dist=cloudera
+++++
+
+To switch between builds, you will need to clear Ivy's dependency
+cache: +ant veryclean+
+
+=== Using a Local Hadoop Installation
+
+Sqoop can be compiled against a locally-installed version of Sqoop,
+bypassing the maven repository. To do this you will need to set 
+three properties:
+
+- hadoop.dist should be set to "local"
+- hadoop.shim should be set to "cloudera" or "apache", to tell Sqoop whether
+  to build the Cloudera or Apache-specific shim jar
+- hadoop.home should be set to the path where Hadoop is installed.
+
+For example, the following will compile Sqoop against a locally-installed
+version of CDH.
+
+++++
+ant jar jar-one-shim -Dhadoop.dist=local -Dhadoop.shim=cloudera \
+    -Dhadoop.home=/usr/lib/hadoop
+++++
+
+
+== Code Quality Analysis
+
+We have three tools which can be used to analyze Sqoop's code quality.
+
+=== Findbugs
+
+Findbugs detects common errors in programming. New patches should not
+trigger additional warnings in Findbugs.
+
+Install findbugs (1.3.9) according to its instructions. To use it,
+run:
+
+++++
+ant findbugs -Dfindbugs.home=/path/to/findbugs/
+++++
+
+A report will be generated in +build/findbugs/+
+
+=== Cobertura
+
+Cobertura runs code coverage checks. It instruments the build and
+checks that each line and conditional expression is evaluated along
+all possible paths.
+
+Install Cobertura according to its instructions. Then run a test with:
+
+++++
+ant clean
+ant cobertura -Dcobertura.home=/path/to/cobertura
+ant cobertura -Dcobertura.home=/path/to/cobertura \
+    -Dthirdparty=true -Dsqoop.thirdparty.lib.dir=/path/to/thirdparty
+++++
+
+(You'll need to run the cobertura target twice; once against the regular
+test targets, and once against the thirdparty targets.)
+
+When complete, the report will be placed in +build/cobertura/+
+
+New patches should come with sufficient tests for their functionality
+as well as their error recovery code paths. Cobertura can help assess
+whether your tests are thorough enough, or where gaps lie.
+
+=== Checkstyle
+
+Checkstyle enforces our style guide. There are currently a very small
+number of violations of this style in the source code, but hopefully this
+will remain the case. New code should not trigger additional checkstyle
+warnings.
+
+Checkstyle does not need to be installed manually; it will be retrieved via
+Ivy when necessary.
+
+To run checkstyle, execute:
+
+++++
+ant checkstyle
+++++
+
+A report will be generated as +build/checkstyle-errors.html+
+
+
+== Deploying to Maven
+
+To use Sqoop as a dependency in other projects, you can pull Sqoop into your
+dependency management system through Maven.
+
+To install Sqoop in your local +.m2+ cache, run:
+
+++++
+ant mvn-install
+++++
+
+This will install a pom and the Sqoop jar.
+
+To deploy Sqoop to a public repository, use:
+
+++++
+ant mvn-deploy
+++++
+
+By default, this deploys to repository.cloudera.com. You can choose
+the complete URL to deploy to with the +mvn.deploy.url+ property.
+By default, this deploys to the "snapshots" repository. To deploy to
+"staging" or "releases" on repository.cloudera.com, set the
++mvn.repo+ property accordingly.
+
+== Releasing Sqoop
+
+To build a full release of Sqoop, run +ant release -Dversion=(somever)+.
+This will build a binary release tarball and the web-based documentation
+as well as run a release audit which flags any source files which may
+be missing license headers.
+
+(The release audit can be run standalone with the +ant releaseaudit+
+target.)
+
+You must set the +version+ property explicitly; you cannot release a
+snapshot. To simultaneously deploy this to a maven repository, include
+the +mvn-install+ or +mvn-deploy+ targets as well.
+
+
+== Using Eclipse
+
+Running +ant eclipse+ will generate +.project+ and +.classpath+ files that
+will allow you to edit Sqoop sources in Eclipse with all the library
+dependencies correctly resolved. To compile the jars, you should still
+use ant.
+
