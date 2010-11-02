@@ -1,0 +1,10 @@
+A HOBBY PROJECT
+
+NOT AN OFFICIAL RELEASE
+
+MAKING sqoop-1.1.0 to work with  HADOOP 0.21
+
+COMPILED USING
+
+ant jar jar-one-shim -Dhadoop.dist=local -Dhadoop.shim=apache \
+    -Dhadoop.home=/usr/lib/hadoop
